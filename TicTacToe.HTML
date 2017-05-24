@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<style>
+	body {
+    	background-image: url("yellow-background.jpg");
+    	text-align: center;
+	}
+
+	td > div {
+		height: 120px;
+		width: 120px;
+		text-align: center;
+		font-size:110px;
+
+	}
+
+	table td {
+ 		border: 5px solid #00aaff;
+	}
+
+	table {
+		margin-left: auto;
+    	margin-right: auto;
+    	border-collapse: collapse;
+  		border-style: hidden;
+	}
+
+	button {
+	    display: inline-block;
+		padding: 15px 25px;
+		font-size: 20px;
+		cursor: pointer;
+		text-align: center;
+		text-decoration: none;
+		outline: none;
+		color: #fff;
+		background-color: #00aaff;
+		border: none;
+  		border-radius: 15px;
+  		box-shadow: 0 9px #999;
+	}
+
+	button:hover {background-color: #0088cc}
+
+	button:active {
+  		background-color: #0088cc;
+  		box-shadow: 0 5px #666;
+  		transform: translateY(4px);
+	}
+
+</style>
+<head>
+	<title>Tic Tac Toe</title>
+	
+	<script>
+
+	</script>
+
+</head>
+	<body>
+		<h2>Tic Tac Toe</h2>
+	   	<table id = "ticTacToeTable">
+			<tr>
+				<td><div boardIdx="0" type = "text" id = "0"></div></td>
+				<td><div boardIdx="1" type = "text" id = "1"></div></td>
+				<td><div boardIdx="2" type = "text" id = "2"></div></td>
+			</tr>
+			<tr>
+				<td><div boardIdx="3" type = "text" id = "3"></div></td>
+				<td><div boardIdx="4" type = "text" id = "4"></div></td>
+				<td><div boardIdx="5" type = "text" id = "5"></div></td>					
+			</tr>
+			<tr>
+				<td><div boardIdx="6" type = "text" id = "6"></div></td>
+				<td><div boardIdx="7" type = "text" id = "7"></div></td>
+				<td><div boardIdx="8" type = "text" id = "8"></div></td>
+			</tr>
+		</table>
+		
+		<br>
+		<div id='winner'>Player X's Turn</div>
+		<br>
+		<button onclick = "clearBoxes()">Start New Game</button>
+	</body>
+
+	<script>
+		var turnPlayer = "playerX";
+		var boardArray = [];
+		var turnCount = 0;
+		var winnerFound = false;
+		var winnerLetters = '';
+
+
+//Listen for the user to submit a word
+		var tableClick = document.getElementById('ticTacToeTable');
+
+    	tableClick.addEventListener('click', function(evt) {
+        	if (evt.target.tagName === 'DIV') {
+        		var idx = evt.target.getAttribute('boardIdx');
+        		var myCell = evt.target;
+        		updateBox(turnPlayer, myCell, idx);	
+        		checkForWinner();
+        		checkForCat();
+        		if(winnerFound === true){
+        			printWinner();
+        		}
+	        }
+    	});
+
+
+
+
+
+
+
+    	function updateBox(currentPlayer, myCell, myIdx){
+    		if(currentPlayer === "playerX"){
+    			turnPlayer = "playerO";
+    			myCell.innerHTML = "X";
+    			boardArray[myIdx] = "X";
+    			turnCount ++
+    			document.getElementById('winner').innerHTML = "Player O's turn.";
+    		
+    		}else if(currentPlayer === "playerO"){
+    			turnPlayer = "playerX";
+    			myCell.innerHTML = "O";
+    			boardArray[myIdx] = "O";
+    			turnCount ++;
+    			document.getElementById('winner').innerHTML = "Player X's turn.";
+    		}
+    	}
+
+    	function checkForWinner(){
+    		var topRow = boardArray[0] + boardArray[1] + boardArray[2];
+    		var midAcrossRow = boardArray[3] + boardArray[4] + boardArray[5];
+    		var bottomRow = boardArray[6] + boardArray[7] + boardArray[8];
+
+    		var leftRow = boardArray[0] + boardArray[3] + boardArray[6];
+    		var midDownRow = boardArray[1] + boardArray[4] + boardArray[7];
+    		var rightRow = boardArray[2] + boardArray[5] + boardArray[8];
+
+    		var leftDiagonalRow = boardArray[0] + boardArray[4] + boardArray[8];
+    		var rightDiagonalRow = boardArray[2] + boardArray[4] + boardArray[6];
+    		
+    		if(topRow === 'XXX' || topRow === 'OOO'){
+    			winnerLetters = topRow
+    			winnerFound = true;
+    		}
+    		if(midAcrossRow === 'XXX' || midAcrossRow === 'OOO'){
+    			winnerLetters = midAcrossRow
+    			winnerFound = true;
+    		}
+    		if(bottomRow === 'XXX' || bottomRow === 'OOO'){
+    			winnerLetters = bottomRow;
+    			winnerFound = true;
+    		}
+    		if(leftRow === 'XXX' || leftRow === 'OOO'){
+    			winnerLetters = leftRow;
+    			winnerFound = true;
+    		}
+    		if(midDownRow === 'XXX' || midDownRow === 'OOO'){
+    			winnerLetters = midDownRow;
+    			winnerFound = true;
+    		}
+    		if(rightRow === 'XXX' || rightRow === 'OOO'){
+    			winnerLetters = rightRow;
+    			winnerFound = true;
+    		}
+    		if(leftDiagonalRow === 'XXX' || leftDiagonalRow === 'OOO'){
+    			winnerLetters = leftDiagonalRow;
+    			winnerFound = true;
+    		}
+    		if(rightDiagonalRow === 'XXX' || rightDiagonalRow === 'OOO'){
+    			winnerLetters = rightDiagonalRow;
+    			winnerFound = true;
+    		}
+
+    	}
+
+    	function checkForCat(){
+    		if(turnCount === 9 && winnerFound === false){
+    			document.getElementById('winner').innerHTML = "It's a draw!";	
+    		}
+    	}
+
+    	function printWinner(){
+    		document.getElementById('winner').innerHTML = "Congratulations " + winnerLetters.charAt(0) + " won the game!";
+    	}
+
+    	function resetVar(){
+    		turnPlayer = "playerX";
+			boardArray = [];
+			turnCount = 0;
+			winnerFound = false;
+			winnerLetters = '';
+    	}
+
+    	function clearBoxes(){
+			for(var i = 0; i < 9; i++)
+    		document.getElementById(i).innerHTML = "";
+    		document.getElementById('winner').innerHTML = "Player X's turn.";
+    		resetVar();
+		}
+
+	</script>
+</html>
